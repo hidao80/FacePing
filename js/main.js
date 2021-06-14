@@ -70,14 +70,14 @@ function announce(id, msg) {
   
 window.onload = () => {
     const sounds = {
-        "START_UP": new Howl({ src: '../sound/start_up.mp3'}),
-        "SUBSCRIBED": new Howl({ src: '../sound/subscribed.mp3'}),
-        "UNSUBSCRIBED": new Howl({ src: '../sound/unsubscribed.mp3'}),
-        "WELCOME_HOME": new Howl({ src: '../sound/welcome_home.mp3'}),
-        "REGISTERED": new Howl({ src: '../sound/registered.mp3'}),
-        "NOT_SUBSCRIBED": new Howl({ src: '../sound/not_subscribed.mp3'}),
-        "SUBSCRIBED_FAILED": new Howl({ src: '../sound/subscribed_failed.mp3'}),
-        "UNSUBSCRIBED_FAILED": new Howl({ src: '../sound/unsubscribed_failed.mp3'})
+        "START_UP": new Howl({ src: 'sound/start_up.mp3'}),
+        "SUBSCRIBED": new Howl({ src: 'sound/subscribed.mp3'}),
+        "UNSUBSCRIBED": new Howl({ src: 'sound/unsubscribed.mp3'}),
+        "WELCOME_HOME": new Howl({ src: 'sound/welcome_home.mp3'}),
+        "REGISTERED": new Howl({ src: 'sound/registered.mp3'}),
+        "NOT_SUBSCRIBED": new Howl({ src: 'sound/not_subscribed.mp3'}),
+        "SUBSCRIBED_FAILED": new Howl({ src: 'sound/subscribed_failed.mp3'}),
+        "UNSUBSCRIBED_FAILED": new Howl({ src: 'sound/unsubscribed_failed.mp3'})
     };
 
     // メッセージが流れ終わったらリロード
@@ -135,8 +135,7 @@ window.onload = () => {
             .catch(err => {
                 console.log(err);  // エラー内容をコンソールに出力
             });
-        // }, 600000)
-        }, 10000);
+        }, 600000)
     }
 
     // ユーザリスト JSON からユーザ人数分の video タグを作成

@@ -21,9 +21,13 @@ ID の発行に`crypto.subtle.digest`を使用しているため、https での�
 ## インストール
 
 ```sh
-git clone https://github.com/hidao80/FacePing.git /path/of/public_html
+cd /path/of/install/dir
+git clone https://github.com/hidao80/FacePing.git
+cd FacePing
+chmod 777 photo/ db/ db/db.json
 ```
 
 ## ToDo
 
 - [ ] 写真の読み込みを Ajax にする
+- [ ] 写真の顔部分のみ切り抜く

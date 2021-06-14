@@ -22,7 +22,7 @@ $extensions = [
 ];
 
 //MIMEタイプから拡張子を選択してファイル名を作成
-$filename = "../photo/{$post_array['id']}.{$extensions[$mime_type]}";
+$filename = diename(__FILE__)."/../photo/{$post_array['id']}.{$extensions[$mime_type]}";
 
 // 画像ファイルの保存
 file_put_contents($filename, $iamge, LOCK_EX)

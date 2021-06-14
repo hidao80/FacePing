@@ -1,5 +1,5 @@
 <?php
-define("DB_JSON", "../db/db.json");
+define("DB_JSON", dirname(__FILE__)."/../db/db.json");
 
 $rest_json = file_get_contents("php://input");
 $post_array = json_decode($rest_json, true);

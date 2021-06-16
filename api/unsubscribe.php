@@ -13,6 +13,6 @@ foreach ($db as $index => $entry) {
     }
 }
 
-file_put_contents(DB_JSON, json_encode($db, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT), LOCK_EX)
+file_put_contents(DB_JSON, json_encode(array_values($db), JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT), LOCK_EX)
     ? http_response_code(200)
     : http_response_code(500);

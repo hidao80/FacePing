@@ -8,6 +8,6 @@ $db = json_decode(file_get_contents(DB_JSON), true);
 
 $db[] = ["id" => $post_array['id']];
 
-file_put_contents(DB_JSON, json_encode($db, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT), LOCK_EX)
+file_put_contents(DB_JSON, json_encode(array_values($db), JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT), LOCK_EX)
     ? http_response_code(200)
     : http_response_code(500);

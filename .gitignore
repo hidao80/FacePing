@@ -1,3 +1,6 @@
 *.wav
 *.identifier
 *.png
+image/
+db/db.json
+api/php.log

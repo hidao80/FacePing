@@ -1,4 +1,7 @@
 'use strict';
+// const DEBUG = false;
+const DEBUG = true;
+
 /**
  * getElementByIdの略記法
  * @param {String} id 
@@ -69,53 +72,58 @@ function announce(id, msg) {
 }
   
 window.onload = () => {
-    const sounds = {
-        "START_UP": new Howl({ src: 'sound/start_up.mp3'}),
-        "SUBSCRIBED": new Howl({ src: 'sound/subscribed.mp3'}),
-        "UNSUBSCRIBED": new Howl({ src: 'sound/unsubscribed.mp3'}),
-        "WELCOME_HOME": new Howl({ src: 'sound/welcome_home.mp3'}),
-        "REGISTERED": new Howl({ src: 'sound/registered.mp3'}),
-        "NOT_SUBSCRIBED": new Howl({ src: 'sound/not_subscribed.mp3'}),
-        "SUBSCRIBED_FAILED": new Howl({ src: 'sound/subscribed_failed.mp3'}),
-        "UNSUBSCRIBED_FAILED": new Howl({ src: 'sound/unsubscribed_failed.mp3'})
-    };
-
-    // メッセージが流れ終わったらリロード
-    sounds.SUBSCRIBED.on("end", () => {location.reload();});
-    sounds.UNSUBSCRIBED.on("end", () => {location.reload();});
-
     let db; 
 
-    // リロード以外の方法で読み込まれたときは起動メッセージを流す
-    if(performance.getEntriesByType("navigation")[0].type != "reload") {
-        announce("message", "起動します");
-        play_sound("START_UP", sounds);
-    }    
+    // ユーザリスト JSON からユーザ人数分の video タグを作成
+    const fetch_images = () => {
+        fetch("db/db.json", {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(jso => {
+            $('container').innerHTML = "";
 
-    // 登録済みなら 1分ごとにシャッターを切り、顔写真をアップロードする
-    let id_text =localStorage.getItem("FacePing.id");
-    if (id_text) {
-        navigator.mediaDevices.getUserMedia({ video: {facingMode: "user"}, audio: false })
-            .then(function(stream){$('camera').srcObject = stream})
-            .catch(function(err) {alert(err.name + " " + err.message)});
+            if (DEBUG) console.log(jso);
+            db = jso;
 
+            for (const item of jso) {
+                if (DEBUG) console.log(item);
+                const child = document.createElement("img");
+                const img = $('container').appendChild(child);
+                img.src = `../photo/${item.id}.png?${new Date().getTime()}`;
+                img.id = item.id;
+                img.classList.add("face_photo");
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });        
+    }
+
+    const start_up = (id_text) => {
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+        .then(function(stream){$('camera').srcObject = stream})
+        .catch(function(err) {alert(err.name + " " + err.message)});
 
         setInterval(() => {
-            const canvas_capture_image = $('capture_image');
-            const ctx = canvas_capture_image.getContext('2d');
+            const canvas = $('capture_image');
             const va = $('camera');
-    
-            canvas_capture_image.width = va.videoWidth;
-            canvas_capture_image.height = va.videoHeight;
-            ctx.drawImage(va, 0, 0, va.videoWidth, va.videoHeight, 0, 0, va.videoWidth, va.videoHeight);
-            console.log(canvas_capture_image.toDataURL());
+
+            canvas.width = va.videoWidth;
+            canvas.height = va.videoHeight;
+            canvas.getContext('2d').drawImage(va, 0, 0);
 
             // サーバに新しい画像をアップロードする
             fetch('api/upload.php', {
                 method: 'POST',
                 body: JSON.stringify({
                     id: id_text,
-                    img: canvas_capture_image.toDataURL()
+                    img: canvas.toDataURL()
                 }),
                 headers: {
                     'Content-Type': 'application/json'
@@ -129,40 +137,39 @@ window.onload = () => {
                 }
                 
                 // 画像アップロード API が成功した
-                // おいおい Ajax にするけど、とりあえずリロードで画像更新
-                location.reload();
+                fetch_images();
             })
             .catch(err => {
                 console.log(err);  // エラー内容をコンソールに出力
             });
-        }, 600000)
+        }, 10000)    
     }
 
-    // ユーザリスト JSON からユーザ人数分の video タグを作成
-    fetch("db/db.json", {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(async response => {
-        if (!response.status) {
-            return false;
-        }
-        db = response.json();
+    const sounds = {
+        "START_UP": new Howl({ src: 'sound/start_up.mp3'}),
+        "SUBSCRIBED": new Howl({ src: 'sound/subscribed.mp3', end: fetch_images}),
+        "UNSUBSCRIBED": new Howl({ src: 'sound/unsubscribed.mp3', end: fetch_images}),
+        "WELCOME_HOME": new Howl({ src: 'sound/welcome_home.mp3'}),
+        "REGISTERED": new Howl({ src: 'sound/registered.mp3'}),
+        "NOT_SUBSCRIBED": new Howl({ src: 'sound/not_subscribed.mp3'}),
+        "SUBSCRIBED_FAILED": new Howl({ src: 'sound/subscribed_failed.mp3'}),
+        "UNSUBSCRIBED_FAILED": new Howl({ src: 'sound/unsubscribed_failed.mp3'})
+    };    
 
-        for (const item of await db) {
-            console.log(item);
-            const child = document.createElement("img");
-            const img = $('container').appendChild(child);
-            img.setAttribute('src', `../photo/${item.id}.png`);
-            img.setAttribute('id', item.id);
-            img.classList.add("face_photo");
-        }
-    })
-    .catch(err => {
-        console.log(err);
-    });
+    // リロード以外の方法で読み込まれたときは起動メッセージを流す
+    if(performance.getEntriesByType("navigation")[0].type != "reload") {
+        announce("message", "起動します");
+        play_sound("START_UP", sounds);
+    }    
+
+    fetch_images();
+
+    // 登録済みなら 1分ごとにシャッターを切り、顔写真をアップロードする
+    let id_text = localStorage.getItem("FacePing.id");
+    if (id_text) {
+        start_up(id_text);
+    }
+
 
     // 登録ボタンクリック
     $('subscribe').addEventListener('click', async () => {
@@ -205,6 +212,9 @@ window.onload = () => {
             // 登録解除メッセージが流れ終わったらリロードを上で設定している
             announce("message", "登録しました");
             play_sound("SUBSCRIBED", sounds);
+
+            // 写真読み込みループに入る
+            start_up(id_text);
         })
         .catch(err => {
             console.log(err);  // エラー内容をコンソールに出力
@@ -223,7 +233,7 @@ window.onload = () => {
 
         // 既に登録されている ID は登録を解除する
         for (const item of await db) {
-            // console.log(item);
+            if (DEBUG) console.log(item);
             if (item.id == id_text) {
                 // サーバの DB から ID を削除する
                 fetch('api/unsubscribe.php', {

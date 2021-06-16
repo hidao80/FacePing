@@ -25,7 +25,6 @@ nav div:first-of-type {
 }
 .face_photo {
   width: 320px;
-  height: 200px;
 }
 #id_text {
   margin-left: 1rem;
@@ -33,10 +32,8 @@ nav div:first-of-type {
 video {
   display: none;
   width: 320px;
-  height: 200px;
 }
 canvas {
   display: none;
   width: 320px;
-  height: 200px;
 }

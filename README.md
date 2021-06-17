@@ -29,5 +29,5 @@ chmod 777 photo/ db/ db/db.json
 
 ## ToDo
 
-- [ ] 写真の読み込みを Ajax にする
+- [x] 写真の読み込みを Ajax にする
 - [ ] 写真の顔部分のみ切り抜く

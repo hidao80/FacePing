@@ -21,19 +21,16 @@ nav div {
   cursor: pointer;
 }
 nav div:first-of-type {
-  width: calc(67vw - 6px);
+  width: calc(100vw - 6px - 140px);
 }
 .face_photo {
-  width: 320px;
 }
 #id_text {
   margin-left: 1rem;
 }
 video {
   display: none;
-  width: 320px;
 }
 canvas {
   display: none;
-  width: 320px;
 }

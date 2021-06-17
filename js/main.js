@@ -76,7 +76,7 @@ window.onload = () => {
 
     // ユーザリスト JSON からユーザ人数分の video タグを作成
     const fetch_images = () => {
-        fetch("db/db.json", {
+        fetch(`db/db.json?${new Date().getTime()}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json'
@@ -116,7 +116,7 @@ window.onload = () => {
 
             canvas.width = va.videoWidth;
             canvas.height = va.videoHeight;
-            canvas.getContext('2d').drawImage(va, 0, 0);
+            canvas.getContext('2d').drawImage(va, 0, 0, va.videoWidth, va.videoHeight, 0, 0, va.videoWidth* 0.5, va.videoHeight* 0.5);
 
             // サーバに新しい画像をアップロードする
             fetch('api/upload.php', {
@@ -167,7 +167,13 @@ window.onload = () => {
     // 登録済みなら 1分ごとにシャッターを切り、顔写真をアップロードする
     let id_text = localStorage.getItem("FacePing.id");
     if (id_text) {
+        $('subscribe').style.display = 'none';
+        $('unsubscribe').style.display = 'block';
+
         start_up(id_text);
+    } else {
+        $('subscribe').style.display = 'block';
+        $('unsubscribe').style.display = 'none';
     }
 
 
@@ -179,8 +185,8 @@ window.onload = () => {
         // 登録をキャンセルする
         for (const item of await db) {
             if (item.id == id_text) {
-                announce("message", "既に登録されています");
-                play_sound("REGISTERED", sounds);
+                // announce("message", "既に登録されています");
+                // play_sound("REGISTERED", sounds);
                 return;
             }    
         }
@@ -212,6 +218,9 @@ window.onload = () => {
             // 登録解除メッセージが流れ終わったらリロードを上で設定している
             announce("message", "登録しました");
             play_sound("SUBSCRIBED", sounds);
+
+            $('subscribe').style.display = 'none;;
+            $('unsubscribe').style.display = 'block';
 
             // 写真読み込みループに入る
             start_up(id_text);
@@ -259,6 +268,9 @@ window.onload = () => {
                     // 登録メッセージが流れ終わったらリロードを上で設定している
                     announce("message", "登録を解除しました");
                     play_sound("UNSUBSCRIBED", sounds);
+
+                    $('subscribe').style.display = 'block';
+                    $('unsubscribe').style.display = 'none';
                 })
                 .catch(err => {
                     console.log(err);  // エラー内容をコンソールに出力

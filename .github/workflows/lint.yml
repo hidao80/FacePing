@@ -42,3 +42,4 @@ jobs:
         uses: docker://ghcr.io/github/super-linter:slim-v4
         env:
           VALIDATE_ALL_CODEBASE: false     # 新規・変更された差分のファイルだけをチェック
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

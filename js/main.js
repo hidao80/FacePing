@@ -89,7 +89,7 @@ function fetch_images() {
  */
 function start_up(id_text) {
     // カメラの初期化
-    navigator.mediaDevices.getUserMedia({ video: { width: 240, height:240}, audio: false })
+    navigator.mediaDevices.getUserMedia({ video: { frameRate: { ideal: 15 }, width: 240, height:240}, audio: false })
     .then(stream => {_$('camera').srcObject = stream})
     .catch(err => alert(err.name + " " + err.message));
 

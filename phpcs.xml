@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<ruleset name="Laravel Standards">
+    <description>The Laravel Coding Standards</description>
+
+    <!-- 対象フォルダ -->
+    <file>api/</file>
+
+    <!-- 除外したいファイル、ディレクトリ
+    <exclude-pattern>*/database/*</exclude-pattern>
+     -->
+
+    <!-- PSR2をベースとする -->
+    <rule ref="PSR2">
+        <!-- 除外したい項目 -->
+        <exclude name="Generic.Files.LineLength.TooLong"/>
+    </rule>
+
+    <arg name="colors"/>
+    <arg value="p"/>
+
+    <ini name="memory_limit" value="128M"/>
+    <rule ref="PSR2"/>
+</ruleset>

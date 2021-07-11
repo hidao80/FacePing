@@ -1,6 +1,9 @@
+image/
+
 *.wav
 *.identifier
 *.png
-image/
+*.jpg
+
 db/db.json
 api/php.log

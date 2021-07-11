@@ -1,3 +1,7 @@
+<?php
+$DEBUG = true;
+$update = $DEBUG ? date("Ymdhis") : "";
+?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -5,9 +9,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Face Ping</title>
-    <link defer rel="stylesheet" href="css/style.css">
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.2/howler.min.js"></script>
-    <script defer src="js/main.js"></script>
+    <link defer rel="stylesheet" href="css/style.css?<?= $update ?>">
+    <script defer src="js/main.js?<?= $update ?>" type="module"></script>
 </head>
 <body>
     <nav>
@@ -17,7 +20,7 @@
     </nav>
     <container id="container">
 
-    </container>  
+    </container>
     <video id="camera" autoplay playsinline></video>
     <canvas id="capture_image"></canvas>
 </body>

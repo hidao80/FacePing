@@ -2,6 +2,7 @@
 const global = {
     db: {},
     DEBUG: true,
+    SCREEN_DEBUG: false,
     IMAGE_UPDATE_INTERVAL: 10000,  // 10秒に一度更新
     TYPE_RELOAD: 1
 }
@@ -88,9 +89,9 @@ function fetch_images() {
  */
 function start_up(id_text) {
     // カメラの初期化
-    navigator.mediaDevices.getUserMedia({ video: {width: 320, height:240}, audio: false })
-    .then(function(stream){_$('camera').srcObject = stream})
-    .catch(function(err) {alert(err.name + " " + err.message)});
+    navigator.mediaDevices.getUserMedia({ video: { width: 240, height:240}, audio: false })
+    .then(stream => {_$('camera').srcObject = stream})
+    .catch(err => alert(err.name + " " + err.message));
 
     setInterval(() => {
         const canvas = _$('capture_image');
@@ -99,7 +100,7 @@ function start_up(id_text) {
         // キャンバスにカメラ映像の 1フレームだけコピー
         canvas.width = va.videoWidth;
         canvas.height = va.videoHeight;
-        canvas.getContext('2d').drawImage(va, 0, 0);
+        canvas.getContext('2d').drawImage(va, 0, 0, va.videoWidth, va.videoHeight);
 
         if(global.DEBUG) console.log("fetch(upload)");
         // サーバに新しい画像をアップロードする
@@ -114,10 +115,6 @@ function start_up(id_text) {
             }
         })
         .then(response => {
-            if(global.DEBUG) console.log("Upload: " + response.status);
-            // const src = canvas.toDataURL("image/jpeg", 0.8);
-            // if(global.DEBUG) console.log(`<img src="${src}">`);
-
             // fetch したけど成功しなかった
             if (response.status !== 200) {
                 if(global.DEBUG) console.log("画像の更新に失敗しました");
@@ -137,11 +134,10 @@ function start_up(id_text) {
 
 window.onload = () => {
     // デバッグフラグの設定
-    global.DEUBG = new URL(window.location.href).searchParams.get('DEBUG') ? true : false;
+    global.SCREEN_DEUBG = new URL(window.location.href).searchParams.get('DEBUG') ? true : false;
 
     // デバッグ昨日の初期化
-    debug.init(global.DEUBG);
-    // debug.alignRight(true);
+    debug.init(global.SCREEN_DEUBG);
 
     // リロード以外の方法で読み込まれたときは起動メッセージを流す
     let isIos = true;
